@@ -90,7 +90,6 @@ Funcionalidades
    
 Banco de Dados
     Tabela de usuários:
-    - users 
     - id 
     - name 
     - email 
@@ -98,7 +97,6 @@ Banco de Dados
     - created_at
 
    Tabela de estatísticas:
-   - user_statistics 
    - id 
    - user_id 
    - total_orders 
@@ -119,7 +117,6 @@ Funcionalidades
 
 Banco de Dados
 Tabela de pedidos:
-- orders
 - id
 - user_id
 - product
