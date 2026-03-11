@@ -91,17 +91,21 @@ Funcionalidades
 Banco de Dados
 
 Tabela de usuários:
+```
 - id 
 - name 
 - email 
 - password 
 - created_at
+```
 
 Tabela de estatísticas:
+```
 - id 
 - user_id 
 - total_orders 
 - last_order_date
+```
    
 ### 2. Order Service
 
@@ -117,13 +121,16 @@ Funcionalidades
 - publicação de eventos
 
 Banco de Dados
+
 Tabela de pedidos:
+```
 - id
 - user_id
 - product
 - price
 - status
 - created_at
+```
 
 ## Comunicação entre Serviços
 A comunicação ocorre através do Kafka utilizando eventos de domínio.
