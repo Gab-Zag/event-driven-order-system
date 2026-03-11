@@ -217,13 +217,17 @@ springboot-event-driven-order-platform
 │ ├── repository
 │ ├── entity
 │ ├── security
+│ ├── DTO
+│ ├── exception
 │ └── kafka
 │
 ├── order-service 
 │ ├── controller
 │ ├── service 
 │ ├── repository 
-│ ├── entity 
+│ ├── entity
+│ ├── DTO
+│ ├── exception
 │ └── kafka
 │ 
 └── architecture.md
