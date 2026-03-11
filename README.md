@@ -89,18 +89,19 @@ Funcionalidades
    - consumo de eventos Kafka
    
 Banco de Dados
-    Tabela de usuários:
-    - id 
-    - name 
-    - email 
-    - password 
-    - created_at
 
-   Tabela de estatísticas:
-   - id 
-   - user_id 
-   - total_orders 
-   - last_order_date
+Tabela de usuários:
+- id 
+- name 
+- email 
+- password 
+- created_at
+
+Tabela de estatísticas:
+- id 
+- user_id 
+- total_orders 
+- last_order_date
    
 ### 2. Order Service
 
