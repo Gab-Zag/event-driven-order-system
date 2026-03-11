@@ -1,8 +1,11 @@
 package com.gab.event_driven_order_system.user.controller;
 
+import com.gab.event_driven_order_system.user.dto.getme.getMeDTO;
+import com.gab.event_driven_order_system.user.dto.login.UserLoginDTO;
+import com.gab.event_driven_order_system.user.dto.register.UserRegisterDTO;
 import com.gab.event_driven_order_system.user.service.UserService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -11,5 +14,21 @@ public class UserController {
 
     public UserController(UserService userService){
         this.userService = userService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody UserRegisterDTO data){
+
+        return ResponseEntity.ok(userService.registerUser(data));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser (@RequestBody UserLoginDTO data){
+        return ResponseEntity.ok(userService.loginUser(data));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity getMe(@RequestBody getMeDTO data){
+        return ResponseEntity.ok(userService.getMe(data));
     }
 }

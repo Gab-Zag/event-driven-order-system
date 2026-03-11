@@ -1,5 +1,6 @@
 package com.gab.event_driven_order_system.user.entity.user;
 
+import com.gab.event_driven_order_system.user.entity.statistic.Statistic;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,4 +30,7 @@ public class User {
 
     @Column(name = "created_at")
     private Timestamp createdAt;
+
+    @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY)
+    private Statistic statistic;
 }
