@@ -1,12 +1,18 @@
 package com.gab.event_driven_order_system.user.service;
 
+import com.gab.event_driven_order_system.user.configuration.infra.TokenService;
 import com.gab.event_driven_order_system.user.dto.getme.getMeDTO;
+import com.gab.event_driven_order_system.user.dto.login.LoginResponseDTO;
 import com.gab.event_driven_order_system.user.dto.login.UserLoginDTO;
 import com.gab.event_driven_order_system.user.dto.register.UserRegisterDTO;
 import com.gab.event_driven_order_system.user.entity.statistic.Statistic;
 import com.gab.event_driven_order_system.user.entity.user.User;
 import com.gab.event_driven_order_system.user.repository.StatisticRepository;
 import com.gab.event_driven_order_system.user.repository.UserRepository;
+import lombok.extern.java.Log;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -17,21 +23,22 @@ import java.util.regex.Pattern;
 public class UserService {
 
     private final UserRepository userRepository;
+    private AuthenticationManager authenticationManager;
+    private TokenService tokenService;
     private final StatisticRepository statisticRepository;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-z]+$");
 
-    public UserService(UserRepository userRepository, StatisticRepository statisticRepository){
+    public UserService(UserRepository userRepository, StatisticRepository statisticRepository, AuthenticationManager authenticationManager, TokenService tokenService){
         this.userRepository = userRepository;
         this.statisticRepository = statisticRepository;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
     }
 
     public String registerUser(UserRegisterDTO data){
         emailVerification(data.email());
-        User user = new User();
-        user.setEmail(data.email());
-        user.setName(data.name());
-        user.setPassword(data.password());
-        user.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+        User user = new User(data.name(),data.email(),encryptedPassword, Timestamp.valueOf(LocalDateTime.now()));
         userRepository.save(user);
         Statistic statistic = new Statistic();
         statistic.setUserId(user);
@@ -41,12 +48,11 @@ public class UserService {
         return "Usuário registrado com sucesso";
     }
 
-    public String loginUser(UserLoginDTO data){
-        User user = userRepository.findByEmail(data.email()).orElseThrow(() -> new RuntimeException("Usario nao encontrado"));
-        if(!user.getPassword().equals(data.password())){
-            throw new RuntimeException("Senha incorreta");
-        }
-        return "Login realizado com sucesso";
+    public LoginResponseDTO loginUser(UserLoginDTO data){
+        var userNamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+        var auth = this.authenticationManager.authenticate(userNamePassword);
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+        return new LoginResponseDTO(token);
     }
 
     public User getMe(getMeDTO data){
@@ -54,7 +60,7 @@ public class UserService {
     }
 
     protected void emailVerification(String email){
-        if(email == null || !EMAIL_PATTERN.matcher(email).matches() || userRepository.findByEmail(email).isPresent()){
+        if(email == null || !EMAIL_PATTERN.matcher(email).matches() || userRepository.findByEmail(email) != null){
             throw new RuntimeException("Email Invalido");
         }
     }
