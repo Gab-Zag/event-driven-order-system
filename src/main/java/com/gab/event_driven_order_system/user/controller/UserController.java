@@ -1,6 +1,7 @@
 package com.gab.event_driven_order_system.user.controller;
 
-import com.gab.event_driven_order_system.user.dto.getme.getMeDTO;
+import com.gab.event_driven_order_system.user.dto.getme.GetMeDTO;
+import com.gab.event_driven_order_system.user.dto.getme.GetMeReturnDTO;
 import com.gab.event_driven_order_system.user.dto.login.LoginResponseDTO;
 import com.gab.event_driven_order_system.user.dto.login.UserLoginDTO;
 import com.gab.event_driven_order_system.user.dto.register.UserRegisterDTO;
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity getMe(@RequestBody @Valid getMeDTO data){
+    public ResponseEntity<GetMeReturnDTO> getMe(@RequestBody @Valid GetMeDTO data){
         return ResponseEntity.ok(userService.getMe(data));
     }
 }

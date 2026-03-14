@@ -1,7 +1,8 @@
 package com.gab.event_driven_order_system.user.service;
 
 import com.gab.event_driven_order_system.user.configuration.infra.TokenService;
-import com.gab.event_driven_order_system.user.dto.getme.getMeDTO;
+import com.gab.event_driven_order_system.user.dto.getme.GetMeDTO;
+import com.gab.event_driven_order_system.user.dto.getme.GetMeReturnDTO;
 import com.gab.event_driven_order_system.user.dto.login.LoginResponseDTO;
 import com.gab.event_driven_order_system.user.dto.login.UserLoginDTO;
 import com.gab.event_driven_order_system.user.dto.register.UserRegisterDTO;
@@ -9,7 +10,6 @@ import com.gab.event_driven_order_system.user.entity.statistic.Statistic;
 import com.gab.event_driven_order_system.user.entity.user.User;
 import com.gab.event_driven_order_system.user.repository.StatisticRepository;
 import com.gab.event_driven_order_system.user.repository.UserRepository;
-import lombok.extern.java.Log;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -49,14 +49,16 @@ public class UserService {
     }
 
     public LoginResponseDTO loginUser(UserLoginDTO data){
-        var userNamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
-        var auth = this.authenticationManager.authenticate(userNamePassword);
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(),data.password());
+        var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
         return new LoginResponseDTO(token);
     }
 
-    public User getMe(getMeDTO data){
-        return userRepository.findById(data.id()).orElseThrow(()-> new RuntimeException("Usuario nao encontrado"));
+    public GetMeReturnDTO getMe(GetMeDTO data){
+        User user =  userRepository.findById(data.id()).orElseThrow(()-> new RuntimeException("Usuario nao encontrado"));
+        Statistic statistic = statisticRepository.getReferenceById(user.getId());
+        return new GetMeReturnDTO(user.getEmail(), user.getId(), user.getName(), statistic.getTotalOrders(), statistic.getLastOrder());
     }
 
     protected void emailVerification(String email){
