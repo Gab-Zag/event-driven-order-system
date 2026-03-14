@@ -37,6 +37,9 @@ public class UserService {
 
     public String registerUser(UserRegisterDTO data){
         emailVerification(data.email());
+        if(userRepository.findByEmail(data.email()) != null){
+            throw new RuntimeException("Email ja cadastrado");
+        }
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User user = new User(data.name(),data.email(),encryptedPassword, Timestamp.valueOf(LocalDateTime.now()));
         userRepository.save(user);
@@ -49,6 +52,9 @@ public class UserService {
     }
 
     public LoginResponseDTO loginUser(UserLoginDTO data){
+        if(userRepository.findByEmail(data.email()) == null){
+            throw new RuntimeException("Nao possui usuário com este email");
+        }
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(),data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
@@ -57,12 +63,12 @@ public class UserService {
 
     public GetMeReturnDTO getMe(GetMeDTO data){
         User user =  userRepository.findById(data.id()).orElseThrow(()-> new RuntimeException("Usuario nao encontrado"));
-        Statistic statistic = statisticRepository.getReferenceById(user.getId());
-        return new GetMeReturnDTO(user.getEmail(), user.getId(), user.getName(), statistic.getTotalOrders(), statistic.getLastOrder());
+        Statistic statistic = statisticRepository.findByUserId(user).orElseThrow();
+        return new GetMeReturnDTO(user.getId(),user.getName(), user.getEmail(), statistic.getTotalOrders(), statistic.getLastOrder());
     }
 
     protected void emailVerification(String email){
-        if(email == null || !EMAIL_PATTERN.matcher(email).matches() || userRepository.findByEmail(email) != null){
+        if(email == null || !EMAIL_PATTERN.matcher(email).matches()){
             throw new RuntimeException("Email Invalido");
         }
     }
