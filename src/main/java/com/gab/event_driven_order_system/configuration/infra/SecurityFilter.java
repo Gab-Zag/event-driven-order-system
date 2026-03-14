@@ -1,4 +1,4 @@
-package com.gab.event_driven_order_system.user.configuration.infra;
+package com.gab.event_driven_order_system.configuration.infra;
 
 import com.gab.event_driven_order_system.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;

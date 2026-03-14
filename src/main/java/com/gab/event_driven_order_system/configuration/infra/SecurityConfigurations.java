@@ -1,4 +1,4 @@
-package com.gab.event_driven_order_system.user.configuration.infra;
+package com.gab.event_driven_order_system.configuration.infra;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

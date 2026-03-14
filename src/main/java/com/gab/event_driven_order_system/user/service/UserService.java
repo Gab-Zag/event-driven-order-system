@@ -1,6 +1,6 @@
 package com.gab.event_driven_order_system.user.service;
 
-import com.gab.event_driven_order_system.user.configuration.infra.TokenService;
+import com.gab.event_driven_order_system.configuration.infra.TokenService;
 import com.gab.event_driven_order_system.user.dto.getme.GetMeDTO;
 import com.gab.event_driven_order_system.user.dto.getme.GetMeReturnDTO;
 import com.gab.event_driven_order_system.user.dto.login.LoginResponseDTO;

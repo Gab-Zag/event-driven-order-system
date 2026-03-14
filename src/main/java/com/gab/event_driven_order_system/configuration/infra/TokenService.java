@@ -1,4 +1,4 @@
-package com.gab.event_driven_order_system.user.configuration.infra;
+package com.gab.event_driven_order_system.configuration.infra;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
