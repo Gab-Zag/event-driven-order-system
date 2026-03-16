@@ -8,6 +8,7 @@ import com.gab.event_driven_order_system.user.dto.login.UserLoginDTO;
 import com.gab.event_driven_order_system.user.dto.register.UserRegisterDTO;
 import com.gab.event_driven_order_system.user.entity.statistic.Statistic;
 import com.gab.event_driven_order_system.user.entity.user.User;
+import com.gab.event_driven_order_system.user.entity.user.UserType;
 import com.gab.event_driven_order_system.user.repository.StatisticRepository;
 import com.gab.event_driven_order_system.user.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,7 +42,7 @@ public class UserService {
             throw new RuntimeException("Email ja cadastrado");
         }
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User user = new User(data.name(),data.email(),encryptedPassword, Timestamp.valueOf(LocalDateTime.now()));
+        User user = new User(data.name(),data.email(),encryptedPassword, Timestamp.valueOf(LocalDateTime.now()), UserType.CLIENT);
         userRepository.save(user);
         Statistic statistic = new Statistic();
         statistic.setUserId(user);
@@ -71,5 +72,9 @@ public class UserService {
         if(email == null || !EMAIL_PATTERN.matcher(email).matches()){
             throw new RuntimeException("Email Invalido");
         }
+    }
+
+    public User findUser(Integer id){
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User nao encontrado"));
     }
 }

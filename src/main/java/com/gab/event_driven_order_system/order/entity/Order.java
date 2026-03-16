@@ -36,4 +36,12 @@ public class Order {
 
     @Column(name = "created_at")
     private Timestamp createdAt;
+
+    public Order(User userId, String product, BigDecimal price, Status status, Timestamp createdAt){
+        this.userId = userId;
+        this.product = product;
+        this.price = price;
+        this.status = status;
+        this.createdAt = createdAt;
+    }
 }

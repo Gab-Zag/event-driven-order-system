@@ -38,11 +38,15 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY)
     private Statistic statistic;
 
-    public User(String name, String email, String password, Timestamp createdAt){
+    @Enumerated(EnumType.STRING)
+    private UserType type;
+
+    public User(String name, String email, String password, Timestamp createdAt, UserType type){
         this.name = name;
         this.email = email;
         this.password = password;
         this.createdAt = createdAt;
+        this.type = type;
     }
 
     @Override
